@@ -10,7 +10,9 @@ const app = express();
 const PORT = 8000; // Explicitly declare the PORT constant
 
 app.use(cors({
-    origin: '*'
+    origin: ["https://exam-api-frontend.vercel.app/"],
+    methods: ["GET","POST","PUT","DELETE"],
+    credentials: true
 }));
 
 app.use(express.json()); // Middleware to parse JSON requests
