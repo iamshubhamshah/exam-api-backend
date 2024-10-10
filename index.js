@@ -1,0 +1,42 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const StudentRoute = require('./routes/StudentRoute');
+const DistrictBlockSchoolRoute = require('./routes/DistrictBlockSchoolRoute');
+const UserRoute = require('./routes/UserRoute');
+const cors = require('cors');
+const BulkUPloadRoute = require('./routes/BulkUploadRoute');
+
+const app = express();
+const PORT = 8000; // Explicitly declare the PORT constant
+
+app.use(cors({
+    origin: '*'
+}));
+
+app.use(express.json()); // Middleware to parse JSON requests
+
+//connecting to db
+
+async function connectDb() {
+    try {
+        await mongoose.connect("mongodb+srv://mbshbuhamshah:UReCN8RsIy3RDYJD@mvcbackend.arkoj.mongodb.net/Examination?retryWrites=true&w=majority&appName=mvcBackend");
+        console.log("MongoDB connected successfully");
+    } catch (error) {
+        console.error("MongoDB connection error:", error.message);
+    }        
+}
+
+// Call the function to connect
+connectDb();
+
+// Use the StudentRoute
+app.use('/api', StudentRoute);
+app.use('/api',DistrictBlockSchoolRoute);
+app.use('/api', UserRoute);
+app.use('/api', BulkUPloadRoute)
+
+app.listen(PORT, function() {
+    console.log('Server is running on port ' + PORT);
+});
+
+
