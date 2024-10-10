@@ -7,7 +7,7 @@ const cors = require('cors');
 const BulkUPloadRoute = require('./routes/BulkUploadRoute');
 
 const app = express();
-const PORT = 8000; // Explicitly declare the PORT constant
+const PORT = process.env.PORT || 8000;
 
 app.use(cors({
     origin: ["https://exam-api-frontend.vercel.app/"],
