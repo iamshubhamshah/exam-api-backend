@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-    origin: ["https://exam-api-frontend.vercel.app/"],
+    origin: ["https://exam-api-frontend.vercel.app"],
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
 }));
