@@ -3,18 +3,23 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const Student = require('../models/StudentModel');
 
-
 const upload = multer();
 
 const BulkPost = async (req, res) => {
     try {
         const workbook = XLSX.read(req.file.buffer);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet); // Corrected to read from the worksheet
+        const jsonData = XLSX.utils.sheet_to_json(worksheet); // Read data from the worksheet
 
-        // Save each student to database
+        // Extract the mobile number from the request body
+        const isRegisteredBy = req.body.isRegisteredBy; // Make sure this is sent from the frontend
+
+        // Save each student to the database
         for (const student of jsonData) {
-            const newStudent = new Student(student);
+            const newStudent = new Student({
+                ...student, // Spread the student data
+                isRegisteredBy: isRegisteredBy // Include the mobile number
+            });
             await newStudent.save();
         }
         res.status(200).json({ success: true, message: 'Students uploaded successfully!' });
@@ -24,8 +29,6 @@ const BulkPost = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
     BulkPost
-}
+};

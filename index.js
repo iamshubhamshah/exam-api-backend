@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const StudentRoute = require('./routes/StudentRoute');
@@ -9,8 +11,9 @@ const BulkUPloadRoute = require('./routes/BulkUploadRoute');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+
 app.use(cors({
-    origin: ["https://exam-api-frontend.vercel.app"],
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
 }));

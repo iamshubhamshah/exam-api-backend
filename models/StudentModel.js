@@ -17,7 +17,7 @@ const studentSchema = new mongoose.Schema(
     block: { type: String, required: true },
     school: { type: String, required: true },
     schoolCode: {type: String},
-    grade: { type: String, required: true },
+    grade: { type: String}, // 
     image: { type: String }, // Assuming this is a file path or base64 string
     imageUrl: { type: String }, // URL to the image
     isRegisteredBy: { type: String }, // Could represent the user or admin who registered the student
