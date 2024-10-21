@@ -20,11 +20,12 @@ const createPost = async (req, res) => {
             district: req.body.district,
             block: req.body.block,
             school: req.body.school,
-            schoolCode: req.body.school,
+            schoolCode: req.body.schoolCode,
             grade: req.body.grade,
             image: req.file ? req.file.filename:null,
             imageUrl: req.body.imageUrl,
             isRegisteredBy: req.body.isRegisteredBy,
+            isVerified: req.body.isVerified,
             isVerifiedBy: req.body.isVerifiedBy,
             rollNumber: req.body.rollNumber,
             examType: req.body.examType,
@@ -138,6 +139,7 @@ const updatePosts = async (req, res, next)=>{
             grade: req.body.grade,
             image: req.file ? req.file.filename : undefined,
             
+            
         }
     })
     .then(result=>{
@@ -159,10 +161,11 @@ const updatePosts = async (req, res, next)=>{
 // Below API i learnt from many sources and finally created an PUT Api which updates the data on the matched srn in db. 
 //... It has a short coming of, if the user wants to update his/her srn then he/she won't be able to...
 //...because below api usese srn as the unique identifier for updating documents.
-const updatePostsBySrn = async (req, res, next)=>{
-    console.log(req.params.srn);
-    const srn = req.params.srn
-    Student.findOneAndUpdate({srn:srn}, {
+
+const updatePostsById = async (req, res, next)=>{
+    console.log(req.params.id);
+    const id = req.params.id
+    Student.findOneAndUpdate({_id:id}, {
         $set: {
             srn: req.body.srn,
             name: req.body.name,
@@ -180,7 +183,8 @@ const updatePostsBySrn = async (req, res, next)=>{
             school: req.body.school,
             grade: req.body.grade,
             image: req.file ? req.file.filename : undefined,
-            imageUrl:req.body.imageUrl
+            imageUrl:req.body.imageUrl,
+            isRegisteredBy: req.body.isRegisteredBy,
             
         }
     })
@@ -205,7 +209,7 @@ module.exports = {
     getPosts,
     deletePosts,
     updatePosts,
-    updatePostsBySrn,
+    updatePostsById,
     getPostsBySrn,
 
 }

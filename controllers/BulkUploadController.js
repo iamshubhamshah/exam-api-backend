@@ -2,6 +2,9 @@ const express = require('express');
 const multer = require('multer');
 const XLSX = require('xlsx');
 const Student = require('../models/StudentModel');
+const PDFDocument = require('pdfkit'); // Import PDFKit
+const { Readable } = require('stream');
+
 
 const upload = multer();
 
@@ -14,6 +17,9 @@ const BulkPost = async (req, res) => {
         // Extract the mobile number from the request body
         const isRegisteredBy = req.body.isRegisteredBy; // Make sure this is sent from the frontend
 
+         // Array to hold the saved students
+         const savedStudents = [];
+
         // Save each student to the database
         for (const student of jsonData) {
             const newStudent = new Student({
@@ -21,8 +27,15 @@ const BulkPost = async (req, res) => {
                 isRegisteredBy: isRegisteredBy // Include the mobile number
             });
             await newStudent.save();
+            savedStudents.push(newStudent);
+       
+
+            
         }
-        res.status(200).json({ success: true, message: 'Students uploaded successfully!' });
+//___________________________________________________________________________
+
+        
+        res.status(200).json({ success: true, message: 'Students uploaded successfully!',  data: savedStudents });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Failed to upload students.' });

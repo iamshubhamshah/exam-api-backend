@@ -40,8 +40,9 @@ const StudentController = require('../controllers/StudentController');
 StudentRoute.post('/MB-form', upload, imageUrlMiddleware, StudentController.createPost);
 StudentRoute.get('/MB-form/all', StudentController.getPosts);
 StudentRoute.delete('/MB-form/delete/:id', StudentController.deletePosts);
-StudentRoute.put('/MB-form/updatePostsBySrn/:srn', upload, imageUrlMiddleware,  StudentController.updatePostsBySrn);
+StudentRoute.put('/MB-form/updatePostsBySrn/:id', upload, imageUrlMiddleware,  StudentController.updatePostsById);
 StudentRoute.get('/MB-form/getPostBySrn/:srn', upload, imageUrlMiddleware,  StudentController.getPostsBySrn);
+
 
 
 
