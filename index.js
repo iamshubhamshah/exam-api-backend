@@ -7,6 +7,8 @@ const DistrictBlockSchoolRoute = require('./routes/DistrictBlockSchoolRoute');
 const UserRoute = require('./routes/UserRoute');
 const cors = require('cors');
 const BulkUPloadRoute = require('./routes/BulkUploadRoute');
+const TwilioRoute = require ('./routes/TwilioRoute');
+
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -39,6 +41,7 @@ app.use('/api', StudentRoute);
 app.use('/api',DistrictBlockSchoolRoute);
 app.use('/api', UserRoute);
 app.use('/api', BulkUPloadRoute)
+app.use('/api/notifications', TwilioRoute);
 
 app.listen(PORT, function() {
     console.log('Server is running on port ' + PORT);

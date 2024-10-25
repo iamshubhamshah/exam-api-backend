@@ -27,6 +27,7 @@ const createPost = async (req, res) => {
             isRegisteredBy: req.body.isRegisteredBy,
             isVerified: req.body.isVerified,
             isVerifiedBy: req.body.isVerifiedBy,
+            slipId: req.body.slipId, //generatest the dynamic acknowledgement id for the students.
             rollNumber: req.body.rollNumber,
             examType: req.body.examType,
             centerAllocation1: req.body.centerAllocation1,

@@ -23,6 +23,7 @@ const studentSchema = new mongoose.Schema(
     isRegisteredBy: { type: String }, // Could represent the user or admin who registered the student
     isVerified: {type:String , default:"Pending"}, //Sends the verification status of student form as pending.
     isVerifiedBy: { type: String }, // Could represent the user or admin who verified the student
+    slipId: {type: String}, //Genereates dynamic acknowledgment id for the login of the students.
     rollNumber: { type: String },
     examType: { type: String },
     centerAllocation1: { type: String },
