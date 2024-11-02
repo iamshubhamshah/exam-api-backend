@@ -14,6 +14,7 @@ const PostUser = async (req, res) => {
             district: req.body.district,
             block: req.body.block,
             school: req.body.school,
+            schoolCode: req.body.schoolCode,
             password: req.body.password
         });
 

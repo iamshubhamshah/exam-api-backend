@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     district: {type: String, required: true},
     block: {type:String, required: true},
     school: {type: String},
+    schoolCode: {type: String},
     password: {type: String}
 
 },{timestamps:true});

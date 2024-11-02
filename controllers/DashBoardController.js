@@ -270,7 +270,44 @@ const GetDataFor10Dashboard = async (req, res) => {
         res.status(500).json({ message: "Error fetching dashboard data", error });
     }
 };
+
+const GetAllStudentData = async (req, res) => {
+    try {
+        // Extract query parameters
+        const { srn, isRegisteredBy, grade, district, block, school, name, father } = req.query;
+
+        // Construct query object
+        const query = {};
+        if (srn) query.srn = srn;
+        if (isRegisteredBy) query.isRegisteredBy = isRegisteredBy;
+        if (grade) query.grade = grade;
+        if (district) query.district = district;
+        if (block) query.block = block;
+        if (school) query.school = school;
+        if (name) query.name = name;
+        if (father) query.father = father;
+
+        console.log("Querying with:", query); // Added log for debugging
+
+        // Execute query
+        const students = await Student.find(query);
+
+        // If no students found, return a 404
+        if (students.length === 0) {
+            return res.status(404).json({ message: 'No student found' });
+        }
+
+        // Send all matched students
+        res.status(200).json(students);
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 module.exports = {
     GetDataFor8Dashboard,
-    GetDataFor10Dashboard
+    GetDataFor10Dashboard,
+    GetAllStudentData
 };
