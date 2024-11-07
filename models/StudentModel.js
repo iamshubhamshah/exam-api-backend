@@ -12,11 +12,31 @@ const studentSchema = new mongoose.Schema(
     aadhar: { type: String, unique: true, required: true },
     mobile: { type: String, required: true },
     whatsapp: { type: String, required: true },
-    address: { type: String, required: true },
+
+    //Added pm 7 mov
+    houseNumber: {type: String},
+    cityTownVillage: {type: String, required: true},
+    addressBlock: {type: String, required: true},
+    addressDistrict: {type:String, required: true},
+    addressState: {type: String, required: true},
+
+
+    //^^^^^^^^^^^^^^^^^
+
+
+
+    // address: { type: String, required: true },
     district: { type: String, required: true },
     block: { type: String, required: true },
     school: { type: String, required: true },
     schoolCode: {type: String},
+    
+
+    //added on nov
+
+    previousClassAnnualExamPercentage:{type: String},
+
+    //^^^^^^^^^^^^^^^^^^^
     grade: { type: String}, // 
     image: { type: String }, // Assuming this is a file path or base64 string
     imageUrl: { type: String }, // URL to the image

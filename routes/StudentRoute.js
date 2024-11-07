@@ -1,40 +1,59 @@
+require('dotenv').config();
+
 const express = require('express');
-const StudentRoute = express();
 const multer = require('multer');
-const path = require('path');
+const multerS3 = require('multer-s3');
 const bodyParser = require('body-parser');
+
+
+
+
+
+const path = require('path');
+
 const imageUrlMiddleware = require('../middleware/imageUrlMiddleware');
 
+// Replace aws-sdk with @aws-sdk/client-s3
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
+// Create an express instance
+const StudentRoute = express();
+
+// Use body parser middleware
 StudentRoute.use(bodyParser.json());
-StudentRoute.use(bodyParser.urlencoded({extended:true}));
-StudentRoute.use(express.static('public'));
+StudentRoute.use(bodyParser.urlencoded({ extended: true }));
 
-// Multer Storage Configuration
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        const destPath = path.join(__dirname, '../public/postimages');
-        cb(null, destPath);
-    },
-    filename: function(req, file, cb) {
-        const name = Date.now() + '-' + file.originalname;
-        cb(null, name);
-    }
+// Configure DigitalOcean Spaces endpoint
+const s3Client = new S3Client({
+  endpoint: 'https://blr1.digitaloceanspaces.com',  // Correct endpoint (without bucket name)
+  region: process.env.DO_SPACES_REGION,  // Ensure the region is correct (e.g., 'nyc3', 'blr1', etc.)
+  credentials: {
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET,
+  },
 });
 
-// Initialize multer
-// const upload = multer({ storage: storage });  //multer setup has been done.
+// Multer S3 storage configuration
+const s3Storage = multerS3({
+  s3: s3Client,  // Use s3Client from the updated SDK
+  bucket: 'vikalpaexamination',  // Your actual bucket name
+  acl: 'public-read',  // Permissions
+  contentType: multerS3.AUTO_CONTENT_TYPE,  // Automatically set content type
+  key: function (req, file, cb) {
+    const fileName = `postImages/${Date.now()}-${file.originalname}`;  // File path inside the space
+    cb(null, fileName);
+  },
 
+  
+});
 
+// Initialize multer with DigitalOcean Spaces storage
 const upload = multer({
-    storage: storage,
-    // If the file is not provided, Multer will skip the file validation
-    limits: { fileSize: 5 * 1024 * 1024 }, // Optional: limit file size to 5MB
-}).single('image'); // Replace 'image' with your field name
+  storage: s3Storage,
+  limits: { fileSize: 5 * 1024 * 1024 },  // 5MB max file size
+}).single('image');
 
-
-// require controller
-
+// Import your controller
 const StudentController = require('../controllers/StudentController');
 
 StudentRoute.post('/MB-form', upload, imageUrlMiddleware, StudentController.createPost);

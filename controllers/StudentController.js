@@ -4,6 +4,9 @@ const Student = require('../models/StudentModel');
 
 //Below API posts the data from the form body
 const createPost = async (req, res) => {
+
+    console.log(req.file);
+
     try {
         const post = new Student ({
             srn: req.body.srn,
@@ -16,13 +19,32 @@ const createPost = async (req, res) => {
             aadhar: req.body.aadhar,
             mobile: req.body.mobile,
             whatsapp: req.body.whatsapp,
-            address: req.body.address,
+            // address: req.body.address,
+            //Added on 7 nov
+
+            houseNumber: req.body.houseNumber,
+            cityTownVillage: req.body.cityTownVillage,
+            addressBlock: req.body.addressBlock,
+            addressDistrict: req.body.addressDistrict,
+            addressState: req.body.addressState,
+
+            //^^^^^^^^^^^^^
             district: req.body.district,
             block: req.body.block,
             school: req.body.school,
             schoolCode: req.body.schoolCode,
             grade: req.body.grade,
-            image: req.file ? req.file.filename:null,
+
+
+            //added on 7 nov
+            previousClassAnnualExamPercentage: req.body.previousClassAnnualExamPercentage,
+
+            //^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+            image: req.file ? req.file.originalname : null,
             imageUrl: req.body.imageUrl,
             isRegisteredBy: req.body.isRegisteredBy,
             isVerified: req.body.isVerified,
@@ -133,12 +155,31 @@ const updatePosts = async (req, res, next)=>{
             aadhar: req.body.aadhar,
             mobile: req.body.mobile,
             whatsapp: req.body.whatsapp,
-            address: req.body.address,
+
+            // address: req.body.address,
+            //Added on 7 nov
+
+            houseNumber: req.body.houseNumber,
+            cityTownVillage: req.body.cityTownVillage,
+            addressBlock: req.body.addressBlock,
+            addressDistrict: req.body.addressDistrict,
+            addressState: req.body.addressState,
+
+            //^^^^^^^^^^^^^
+
+
+
             district: req.body.district,
             block: req.body.block,
             school: req.body.school,
             grade: req.body.grade,
-            image: req.file ? req.file.filename : undefined,
+
+                        //added on 7 nov
+                        previousClassAnnualExamPercentage: req.body.previousClassAnnualExamPercentage,
+
+                        //^^^^^^^^^^^^^^^^^^^^^^^^^
+
+            image: req.file ? req.file.originalname : undefined,
             
             
         }
@@ -178,12 +219,32 @@ const updatePostsById = async (req, res, next)=>{
             aadhar: req.body.aadhar,
             mobile: req.body.mobile,
             whatsapp: req.body.whatsapp,
-            address: req.body.address,
+            // address: req.body.address,
+            //Added on 7 nov
+
+            houseNumber: req.body.houseNumber,
+            cityTownVillage: req.body.cityTownVillage,
+            addressBlock: req.body.addressBlock,
+            addressDistrict: req.body.addressDistrict,
+            addressState: req.body.addressState,
+
+            //^^^^^^^^^^^^^
+
+
+
             district: req.body.district,
             block: req.body.block,
             school: req.body.school,
             grade: req.body.grade,
-            image: req.file ? req.file.filename : undefined,
+
+                    //added on 7 nov
+                    previousClassAnnualExamPercentage: req.body.previousClassAnnualExamPercentage,
+
+                    //^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+            
+            image: req.file ? req.file.originalname : undefined,
             imageUrl:req.body.imageUrl,
             isRegisteredBy: req.body.isRegisteredBy,
             
