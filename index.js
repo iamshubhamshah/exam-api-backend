@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://64.227.143.155:3000',
+    origin: [process.env.CORS_ORIGIN, 'http://registration.buniyaadhry.com'],
     methods: ["GET","POST","PUT","DELETE"],
     credentials: true
 }));
