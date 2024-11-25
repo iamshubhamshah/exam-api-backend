@@ -9,6 +9,7 @@ const cors = require('cors');
 const BulkUPloadRoute = require('./routes/BulkUploadRoute');
 const TwilioRoute = require ('./routes/TwilioRoute');
 const DashBoardRoute = require('./routes/DashBoardRoute');
+const VerificationRoute = require('./routes/VerificationRoute');
 
 
 const app = express();
@@ -17,7 +18,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors({
     origin: [process.env.CORS_ORIGIN, 'http://registration.buniyaadhry.com'],
-    methods: ["GET","POST","PUT","DELETE"],
+    methods: ["GET","POST","PUT","PATCH","DELETE"],
     credentials: true
 }));
 
@@ -44,6 +45,7 @@ app.use('/api', UserRoute);
 app.use('/api', BulkUPloadRoute)
 app.use('/api/notifications', TwilioRoute);
 app.use('/api', DashBoardRoute);
+app.use('/api', VerificationRoute)
 
 app.listen(PORT, function() {
     console.log('Server is running on port ' + PORT);

@@ -70,6 +70,8 @@ const createPost = async (req, res) => {
             isQualifiedL1: req.body.isQualifiedL1,
             isQualifiedL2: req.body.isQualifiedL2,
             isQualifiedL3: req.body.isQualifiedL3,
+            verificationRemark: req.body.verificationRemark,
+            verifiedBy: req.body.verifiedBy,
         });
         const postData = await post.save();
 
@@ -203,6 +205,7 @@ const updatePosts = async (req, res, next)=>{
 // Below API i learnt from many sources and finally created an PUT Api which updates the data on the matched srn in db. 
 //... It has a short coming of, if the user wants to update his/her srn then he/she won't be able to...
 //...because below api usese srn as the unique identifier for updating documents.
+// now below api can update the data based on id.
 
 const updatePostsById = async (req, res, next)=>{
     console.log(req.params.id);
@@ -247,6 +250,13 @@ const updatePostsById = async (req, res, next)=>{
             image: req.file ? req.file.originalname : undefined,
             imageUrl:req.body.imageUrl,
             isRegisteredBy: req.body.isRegisteredBy,
+            isVerified: req.body.isVerified,
+            verifiedBy: req.body.verifiedBy,
+            verificationRemark: req.body.verificationRemark,
+            
+            // verifiedBy: req.body.verifiedBy,
+
+
             
         }
     })
@@ -261,7 +271,64 @@ const updatePostsById = async (req, res, next)=>{
             error: error
         })
     })
+
+
 }
+
+
+patchPostById = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        // Find the document by ID
+        const existingDocument = await Student.findById(id);
+        
+        if (!existingDocument) {
+            return res.status(404).json({ message: "No Document found" });
+        }
+
+        // Prepare updated fields
+        const updatedFields = {};
+
+        if (req.body.verificationRemark !== undefined) {
+            if (Array.isArray(req.body.verificationRemark)) {
+                updatedFields.verificationRemark = req.body.verificationRemark.join(", ");
+            } else {
+                updatedFields.verificationRemark = req.body.verificationRemark;
+            }
+        }
+
+        if (req.body.isVerified !== undefined) {
+            updatedFields.isVerified = req.body.isVerified;
+        }
+
+        if (req.body.verifiedBy !== undefined) {
+         updatedFields.verifiedBy = req.body.verifiedBy;
+        }
+
+        // Update the document
+        const result = await Student.updateOne(
+            { _id: id },
+            { $set: updatedFields }
+        );
+
+        // Always respond with success if the document is found and updated
+        res.status(200).json({
+            message: "Student Updated Successfully",
+            updatedFields
+        });
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Error updating the document",
+            error,
+        });
+    }
+};
+
+
+
 //__________________________________________________________________________________________
 
 //Below is the way to export the module so that we can use it anywhere in our backend logics.
@@ -273,5 +340,6 @@ module.exports = {
     updatePosts,
     updatePostsById,
     getPostsBySrn,
+    patchPostById
 
 }

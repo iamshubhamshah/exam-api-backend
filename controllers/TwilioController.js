@@ -13,7 +13,7 @@ const sendNotification = async (req, res) =>{
         
         const response = await client.messages.create({
             body:message,
-            from: process.env.TWILIO_PHONE_NUMBER,
+            from: process.env.TWILIO_PHONE_NUMBER || '+19705281597',
             to: "+91"+mobile,
         });
         res.status(200).json({success:true, response});
