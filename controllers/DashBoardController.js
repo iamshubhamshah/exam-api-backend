@@ -22,6 +22,7 @@ const GetDataFor8Dashboard = async (req, res) => {
                 $match: {
                     isRegisteredBy: { $ne: "" },
                     grade: "8",
+                    isVerified: {$ne: "Rejected"},
                     district: { $in: districts }, // Filter for districts in the array
                     block: { $in: blocks }       // Filter for blocks in the array
                 }
@@ -311,6 +312,7 @@ const GetDataFor10Dashboard = async (req, res) => {
                 $match: {
                     isRegisteredBy: { $ne: "" },
                     grade: "10",
+                    isVerified: {$ne: "Rejected"},
                     district: { $in: districts }, // Filter for districts in the array
                     block: { $in: blocks }       // Filter for blocks in the array
                 }
