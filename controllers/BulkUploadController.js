@@ -46,9 +46,9 @@ const BulkPost = async (req, res) => {
 
          for (const student of jsonData) {
 
-            if (student.dob){
-                student.dob =  convertExcelDateToYYYYMMDD(student.dob);
-            }
+            // if (student.dob){
+            //     student.dob =  convertExcelDateToYYYYMMDD(student.dob);
+            // }
             
             slipId = student.name.slice(0,3) + String(student.srn).slice(0,5)
 
