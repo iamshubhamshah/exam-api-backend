@@ -452,12 +452,13 @@ const GetDataFor10Dashboard = async (req, res) => {
 const GetAllStudentData = async (req, res) => {
     try {
         // Extract query parameters
-        const { srn, isRegisteredBy, grade, district, block, school, name, father } = req.query;
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father } = req.query;
 
         // Construct query object
         const query = {};
         if (srn) query.srn = srn;
         if (isRegisteredBy) query.isRegisteredBy = isRegisteredBy;
+        if (isVerified) query.isVerified = isVerified;
         if (grade) query.grade = grade;
         if (district) query.district = district;
         if (block) query.block = block;
