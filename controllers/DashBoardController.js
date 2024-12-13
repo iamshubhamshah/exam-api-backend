@@ -36,7 +36,15 @@ const GetDataFor8Dashboard = async (req, res) => {
                             $cond: {
                                 if: { $eq: ["$schoolCode", ""] },
                                 then: "$school",
-                                else: "Other Schools"
+
+                                //Below line for showing all schools
+                                else: {
+                                    $cond : {
+                                        if: {$ne: ["$schoolCode", ""]},
+                                        then: "$school",
+                                        else: "Unknown"
+                                    }
+                                }
                             }
                         }
                     },
@@ -326,7 +334,15 @@ const GetDataFor10Dashboard = async (req, res) => {
                             $cond: {
                                 if: { $eq: ["$schoolCode", ""] },
                                 then: "$school",
-                                else: "Other Schools"
+                                
+                                 //Below line for showing all schools
+                                 else: {
+                                    $cond : {
+                                        if: {$ne: ["$schoolCode", ""]},
+                                        then: "$school",
+                                        else: "Unknown"
+                                    }
+                                }
                             }
                         }
                     },
