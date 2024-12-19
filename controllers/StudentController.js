@@ -275,6 +275,7 @@ const updatePostsById = async (req, res, next)=>{
 
 }
 
+//Below is the patch api for verfiying student's data.
 
 patchPostById = async (req, res) => {
     try {
@@ -327,6 +328,44 @@ patchPostById = async (req, res) => {
     }
 };
 
+//Below api is the patch api for updating the student's admit card download status.
+
+patchDownloadAdmitCardById = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+
+        //find the document by id
+        const existingDocument = await Student.findById(id);
+
+        if (!existingDocument) {
+            return res.status(404).json ({message: "No Document Found"});
+        }
+
+      
+        //Update the document
+        const result = await Student.updateOne (
+            {_id: id},
+            {$set: {admitCard1: req.body.admitCard1}}
+        );
+        //Always respond with success if the document is found and updated
+
+        res.status (200).json({
+            message: "Admit Card Download Succesfully",
+            data: req.body.admitCard1
+        })
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Eroor downloading admit card",
+            error,
+        })
+        
+    }
+}
 
 
 //__________________________________________________________________________________________
@@ -340,6 +379,7 @@ module.exports = {
     updatePosts,
     updatePostsById,
     getPostsBySrn,
-    patchPostById
+    patchPostById,
+    patchDownloadAdmitCardById
 
 }

@@ -62,6 +62,7 @@ StudentRoute.delete('/MB-form/delete/:id', StudentController.deletePosts);
 StudentRoute.put('/MB-form/updatePostsBySrn/:id', upload, imageUrlMiddleware,  StudentController.updatePostsById);
 StudentRoute.get('/MB-form/getPostBySrn/:srn', upload, imageUrlMiddleware,  StudentController.getPostsBySrn);
 StudentRoute.patch('/MB-form/patchPostById/:id', upload, imageUrlMiddleware, StudentController.patchPostById);
+StudentRoute.patch('/MB-form/patchDownloadAdmitCardById/:id', upload, imageUrlMiddleware, StudentController.patchDownloadAdmitCardById);
 
 
 
