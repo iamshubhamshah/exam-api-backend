@@ -317,7 +317,7 @@ const GetDataFor10Dashboard = async (req, res) => {
 const GetAllStudentData = async (req, res) => {
     try {
         // Extract query parameters
-        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father } = req.query;
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, L1examinationCenter, admitCard1 } = req.query;
 
         // Construct query object
         const query = {};
@@ -330,6 +330,8 @@ const GetAllStudentData = async (req, res) => {
         if (school) query.school = school;
         if (name) query.name = name;
         if (father) query.father = father;
+        if (L1examinationCenter) query.L1examinationCenter = L1examinationCenter;
+        if (admitCard1) query.admitCard1 = admitCard1;
 
         console.log("Querying with:", query); // Added log for debugging
 
