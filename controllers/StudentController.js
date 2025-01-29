@@ -346,15 +346,15 @@ patchDownloadAdmitCardById = async (req, res) => {
         //Update the document
         const result = await Student.updateOne (
             {_id: id},
-            {$set:{admitCard2: req.body.admitCard2,
-                resultStatus1: req.body.resultStatus1
+            {$set:{admitCard1: req.body.admitCard1,
+                // resultStatus1: req.body.resultStatus1
             }}
         );
         //Always respond with success if the document is found and updated
 
         res.status (200).json({
             message: "Admit Card Download Succesfully",
-            data: req.body.admitCard2
+            data: req.body.admitCard1
         })
 
     } catch (error) {
