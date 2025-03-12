@@ -121,7 +121,7 @@ const getPostsBySrn = async (req, res) => {
 
 
 // Below Api is being used in RegistrationDashComponent to test the data for deleting data from db.
-//... Below api deletes the data on the basis of _id key in the db
+//... Below api deletes the data on the basis of _id key in the db.
 
 const deletePosts = async (req, res)=>{
     try {
@@ -333,6 +333,7 @@ patchPostById = async (req, res) => {
 patchDownloadAdmitCardById = async (req, res) => {
     try {
         const id = req.params.id;
+        const { admitCard1, gradeForDynamicallyUpdatingResultStatusInDb } = req.body; // Access the values from req.body
 
 
         //find the document by id
@@ -342,15 +343,35 @@ patchDownloadAdmitCardById = async (req, res) => {
             return res.status(404).json ({message: "No Document Found"});
         }
 
+        console.log(gradeForDynamicallyUpdatingResultStatusInDb);
       
         //Update the document
-        const result = await Student.updateOne (
-            {_id: id},
-            {$set:{
-                //admitCard1: req.body.admitCard1,
-                resultStatus2: req.body.resultStatus2
-            }}
-        );
+        if (gradeForDynamicallyUpdatingResultStatusInDb === "8") {
+            console.log('i am in a if block')
+            const result = await Student.updateOne (
+                {_id: id},
+                {$set:{
+                    
+    
+                    //admitCard1: req.body.admitCard1,
+                    resultStatus2: true
+                }}
+            );
+        } else {
+            console.log('i am in a else block')
+
+            const result = await Student.updateOne (
+                {_id: id},
+                {$set:{
+                    
+    
+                    //admitCard1: req.body.admitCard1,
+                    resultStatus1: true
+                }}
+            );
+
+        }
+        
         //Always respond with success if the document is found and updated
 
         res.status (200).json({
