@@ -320,7 +320,7 @@ const GetAllStudentData = async (req, res) => {
         // const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1,  L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
 
         // below updated 
-        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf } = req.query;
 
         // Construct query object
         const query = {};
@@ -339,6 +339,7 @@ const GetAllStudentData = async (req, res) => {
         if (isQualifiedL2) query.isQualifiedL2 = isQualifiedL2;
         if (isQualifiedL3) query.isQualifiedL3 = isQualifiedL3;
         if (L2examinationCenter) query.L2examinationCenter = L2examinationCenter;
+        if (L3examinationCenter) query.L3examinationCenter = L3examinationCenter;
         if (attendancePdf) query.attendancePdf = attendancePdf;
 
         console.log("Querying with:", query); // Added log for debugging

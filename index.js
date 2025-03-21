@@ -27,13 +27,37 @@ app.use(express.json()); // Middleware to parse JSON requests
 
 //connecting to db
 
+// async function connectDb() {
+//     try {
+//         await mongoose.connect("mongodb+srv://mbshbuhamshah:UReCN8RsIy3RDYJD@mvcbackend.arkoj.mongodb.net/Examination?retryWrites=true&w=majority&appName=mvcBackend");
+//         console.log("MongoDB connected successfully");
+//     } catch (error) {
+//         console.error("MongoDB connection error:", error.message);
+//     }        
+// }
+
+// // Call the function to connect
+// connectDb();
+
+
+
 async function connectDb() {
     try {
-        await mongoose.connect("mongodb+srv://mbshbuhamshah:UReCN8RsIy3RDYJD@mvcbackend.arkoj.mongodb.net/Examination?retryWrites=true&w=majority&appName=mvcBackend");
+        await mongoose.connect(
+            "mongodb+srv://mbshbuhamshah:UReCN8RsIy3RDYJD@mvcbackend.arkoj.mongodb.net/Examination?retryWrites=true&w=majority&appName=mvcBackend", 
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                serverSelectionTimeoutMS: 50000, // Increases connection timeout
+                socketTimeoutMS: 45000,          // Increases socket timeout
+                maxPoolSize: 50,                 // Limits the max number of connections in the connection pool
+                bufferCommands: false            // Prevents mongoose from buffering commands when the connection is down
+            }
+        );
         console.log("MongoDB connected successfully");
     } catch (error) {
         console.error("MongoDB connection error:", error.message);
-    }        
+    }
 }
 
 // Call the function to connect
