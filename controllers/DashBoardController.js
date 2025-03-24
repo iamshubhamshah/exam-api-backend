@@ -315,12 +315,13 @@ const GetDataFor10Dashboard = async (req, res) => {
 
 
 const GetAllStudentData = async (req, res) => {
+    console.log('i am inside')
     try {
         // Extract query parameters
         // const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1,  L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
 
         // below updated 
-        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf } = req.query;
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf, Level3StudentsRoomNumber} = req.query;
 
         // Construct query object
         const query = {};
@@ -341,6 +342,7 @@ const GetAllStudentData = async (req, res) => {
         if (L2examinationCenter) query.L2examinationCenter = L2examinationCenter;
         if (L3examinationCenter) query.L3examinationCenter = L3examinationCenter;
         if (attendancePdf) query.attendancePdf = attendancePdf;
+        if (Level3StudentsRoomNumber) query.Level3StudentsRoomNumber = Level3StudentsRoomNumber;
 
         console.log("Querying with:", query); // Added log for debugging
 
@@ -363,11 +365,6 @@ const GetAllStudentData = async (req, res) => {
 
 
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-
-
-
 
 
 module.exports = {

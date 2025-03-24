@@ -333,7 +333,7 @@ patchPostById = async (req, res) => {
 patchDownloadAdmitCardById = async (req, res) => {
     try {
         const id = req.params.id;
-        const { admitCard1, gradeForDynamicallyUpdatingResultStatusInDb } = req.body; // Access the values from req.body
+        const { gradeForDynamicallyUpdatingResultStatusInDb } = req.body; // Access the values from req.body
 
 
         //find the document by id
@@ -344,16 +344,22 @@ patchDownloadAdmitCardById = async (req, res) => {
         }
 
         console.log(gradeForDynamicallyUpdatingResultStatusInDb);
+        console.log(id);
+
       
         //Update the document
-        if (gradeForDynamicallyUpdatingResultStatusInDb === "8") {
+        if (gradeForDynamicallyUpdatingResultStatusInDb === 8) {
             console.log('i am in a if block')
             const result = await Student.updateOne (
                 {_id: id},
+                
                 {$set:{
                     
     
-                    //admitCard1: req.body.admitCard1,
+                    // admitCard3: req.body.admitCard3,
+
+                    admitCard3: true,
+
                     resultStatus2: true
                 }}
             );
