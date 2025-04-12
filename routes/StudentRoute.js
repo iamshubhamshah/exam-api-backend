@@ -55,6 +55,7 @@ const upload = multer({
 
 // Import your controller
 const StudentController = require('../controllers/StudentController');
+const Student = require('../models/StudentModel');
 
 StudentRoute.post('/MB-form', upload, imageUrlMiddleware, StudentController.createPost);
 StudentRoute.get('/MB-form/all', StudentController.getPosts);
@@ -63,6 +64,12 @@ StudentRoute.put('/MB-form/updatePostsBySrn/:id', upload, imageUrlMiddleware,  S
 StudentRoute.get('/MB-form/getPostBySrn/:srn', upload, imageUrlMiddleware,  StudentController.getPostsBySrn);
 StudentRoute.patch('/MB-form/patchPostById/:id', upload, imageUrlMiddleware, StudentController.patchPostById);
 StudentRoute.patch('/MB-form/patchDownloadAdmitCardById/:id', upload, imageUrlMiddleware, StudentController.patchDownloadAdmitCardById);
+
+StudentRoute.get('/attendance-l3/:srn', StudentController.patchAttendanceById);
+
+StudentRoute.patch('/attendance-l3/:srn', StudentController.patchAttendanceById);
+
+
 
 
 

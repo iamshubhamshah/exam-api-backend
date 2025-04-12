@@ -401,6 +401,76 @@ patchDownloadAdmitCardById = async (req, res) => {
 
 //__________________________________________________________________________________________
 
+
+
+patchAttendanceById = async (req, res) => {
+
+    console.log('i am insdie controller')
+    try {
+        const {srn} = req.params;
+        console.log(srn)
+        const {  isPresentInL3Examination } = req.body; // Access the values from req.body
+            console.log(isPresentInL3Examination);
+
+        //find the document by id
+        const existingDocument = await Student.find({srn: srn});
+
+        if (!existingDocument) {
+            return res.status(404).json ({message: "No Document Found"});
+        }
+
+       
+        console.log(srn);
+
+      
+        //Update the document
+       
+         
+            const result = await Student.updateOne (
+                {srn: srn},
+                
+                {$set:{
+                    
+    
+                    // admitCard3: req.body.admitCard3,
+
+                    isPresentInL3Examination: isPresentInL3Examination,
+
+                   
+                }}
+            );
+        
+        
+        //Always respond with success if the document is found and updated
+
+        res.status (200).json({
+            message: "Attendance Updated Successfull",
+            data: existingDocument,
+        })
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Eroor Updating Attendance",
+            error,
+        })
+        
+    }
+}
+
+
+//__________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
 //Below is the way to export the module so that we can use it anywhere in our backend logics.
 
 module.exports = {
@@ -411,6 +481,7 @@ module.exports = {
     updatePostsById,
     getPostsBySrn,
     patchPostById,
-    patchDownloadAdmitCardById
+    patchDownloadAdmitCardById,
+    patchAttendanceById
 
 }

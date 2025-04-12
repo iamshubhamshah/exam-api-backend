@@ -65,7 +65,8 @@ const studentSchema = new mongoose.Schema(
     isQualifiedL2: { type: Boolean, default: false },
     isQualifiedL3: { type: Boolean, default: false },
     verificationRemark: {type: String, default: null},
-    verifiedBy: {type: String, default: null}
+    verifiedBy: {type: String, default: null},
+    isPresentInL3Examination: {type: Boolean, default: false}
   },
   { timestamps: true }
 );
