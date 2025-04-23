@@ -331,6 +331,7 @@ patchPostById = async (req, res) => {
 //Below api is the patch api for updating the student's admit card download status.
 
 patchDownloadAdmitCardById = async (req, res) => {
+    console.log('i am inside patch')
     try {
         const id = req.params.id;
         const { gradeForDynamicallyUpdatingResultStatusInDb } = req.body; // Access the values from req.body
@@ -372,7 +373,8 @@ patchDownloadAdmitCardById = async (req, res) => {
                     
     
                     //admitCard1: req.body.admitCard1,
-                    resultStatus1: true
+                    //resultStatus1: true,
+                    admitCard2: true
                 }}
             );
 

@@ -315,8 +315,9 @@ const GetDataFor10Dashboard = async (req, res) => {
 
 
 const GetAllStudentData = async (req, res) => {
-    console.log('i am inside')
+  
     try {
+        console.log('i am inside try block')
         // Extract query parameters
         // const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1,  L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
 
@@ -345,6 +346,7 @@ const GetAllStudentData = async (req, res) => {
         if (Level3StudentsRoomNumber) query.Level3StudentsRoomNumber = Level3StudentsRoomNumber;
 
         console.log("Querying with:", query); // Added log for debugging
+    
 
         // Execute query
         const students = await Student.find(query);
@@ -357,7 +359,11 @@ const GetAllStudentData = async (req, res) => {
         // Send all matched students
         res.status(200).json(students);
         
+        console.log(students)
     } catch (error) {
+
+        console.log('i am inside catch block')
+
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
