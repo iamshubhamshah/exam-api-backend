@@ -321,8 +321,8 @@ const GetAllStudentData = async (req, res) => {
         // Extract query parameters
         // const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1,  L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
 
-        // below updated 
-        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf, Level3StudentsRoomNumber} = req.query;
+        // below updated
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf, Level3StudentsRoomNumber, super100L2ExamBatchDivision, gender, roomNo} = req.query;
 
         // Construct query object
         const query = {};
@@ -344,9 +344,12 @@ const GetAllStudentData = async (req, res) => {
         if (L3examinationCenter) query.L3examinationCenter = L3examinationCenter;
         if (attendancePdf) query.attendancePdf = attendancePdf;
         if (Level3StudentsRoomNumber) query.Level3StudentsRoomNumber = Level3StudentsRoomNumber;
+        if (super100L2ExamBatchDivision) query.super100L2ExamBatchDivision = super100L2ExamBatchDivision;
+        if (gender) query.gender = gender;
+        if (roomNo) query.roomNo = roomNo;
 
         console.log("Querying with:", query); // Added log for debugging
-    
+        console.log(typeof(roomNo))
 
         // Execute query
         const students = await Student.find(query);
@@ -359,7 +362,7 @@ const GetAllStudentData = async (req, res) => {
         // Send all matched students
         res.status(200).json(students);
         
-        console.log(students)
+        //console.log(students)
     } catch (error) {
 
         console.log('i am inside catch block')
@@ -373,8 +376,172 @@ const GetAllStudentData = async (req, res) => {
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+
+//Apit to get data with room and bed number
+const GetAllStudentDataWithRoomAndBedNo = async (req, res) => {
+    try {
+        console.log('i am inside try block');
+        // Extract query parameters
+        const { 
+            srn, isRegisteredBy, isVerified, grade, district, block, school, 
+            name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, 
+            L1examinationCenter, L2examinationCenter, L3examinationCenter,  
+            admitCard1, attendancePdf, Level3StudentsRoomNumber, 
+            super100L2ExamBatchDivision, gender, roomNo 
+        } = req.query;
+
+        // Construct query object
+        const query = {};
+        if (srn) query.srn = srn;
+        if (isRegisteredBy) query.isRegisteredBy = isRegisteredBy;
+        if (isVerified) query.isVerified = isVerified;
+        if (grade) query.grade = grade;
+        if (district) query.district = district;
+        if (block) query.block = block;
+        if (school) query.school = school;
+        if (name) query.name = name;
+        if (father) query.father = father;
+        if (L1examinationCenter) query.L1examinationCenter = L1examinationCenter;
+        if (admitCard1) query.admitCard1 = admitCard1;
+        if (isQualifiedL1) query.isQualifiedL1 = isQualifiedL1;
+        if (isQualifiedL2) query.isQualifiedL2 = isQualifiedL2;
+        if (isQualifiedL3) query.isQualifiedL3 = isQualifiedL3;
+        if (L2examinationCenter) query.L2examinationCenter = L2examinationCenter;
+        if (L3examinationCenter) query.L3examinationCenter = L3examinationCenter;
+        if (attendancePdf) query.attendancePdf = attendancePdf;
+        if (Level3StudentsRoomNumber) query.Level3StudentsRoomNumber = Level3StudentsRoomNumber;
+        if (super100L2ExamBatchDivision) query.super100L2ExamBatchDivision = super100L2ExamBatchDivision;
+        if (gender) query.gender = gender;
+        if (roomNo) query.roomNo = roomNo;
+
+        // console.log("Querying with:", query);
+
+        // Execute query to get students
+        const students = await Student.find(query);
+
+        // If no students found, return a 404
+        if (students.length === 0) {
+            return res.status(404).json({ 
+                message: 'No student found',
+                data: [],
+                roomStatistics: {
+                    male: [],
+                    female: []
+                }
+            });
+        }
+
+        // Get gender-wise room statistics
+        const roomStats = await Student.aggregate([
+            { $match: query }, // Apply the same filters
+            { 
+                $group: {
+                    _id: {
+                        roomNo: "$roomNo",
+                        gender: "$gender"
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            { 
+                $project: {
+                    roomNo: "$_id.roomNo",
+                    gender: "$_id.gender",
+                    count: 1,
+                    _id: 0
+                }
+            },
+            { $sort: { roomNo: 1 } }
+        ]);
+
+        // Organize results by gender
+        const genderWiseRoomStats = {
+            male: roomStats.filter(stat => stat.gender === 'Male' && stat.roomNo),
+            female: roomStats.filter(stat => stat.gender === 'Female' && stat.roomNo)
+        };
+
+        // Send response with both students and room statistics
+        res.status(200).json({
+            message: 'Students retrieved successfully',
+            data: students,
+            roomStatistics: genderWiseRoomStats
+        });
+
+       // console.log(students);
+    } catch (error) {
+        console.log('i am inside catch block');
+        console.error(error);
+        res.status(500).json({ 
+            message: 'Server error',
+            error: error.message 
+        });
+    }
+};
+
+
+
+//Room stats
+const GetRoomStatisticsByBatchDivision = async (req, res) => {
+    try {
+        // Extract query parameters
+        const { super100L2ExamBatchDivision } = req.query;
+
+        // Construct query object
+        const query = {};
+        if (super100L2ExamBatchDivision) {
+            query.super100L2ExamBatchDivision = super100L2ExamBatchDivision;
+        }
+
+        // Fetch room statistics
+        const roomStats = await Student.aggregate([
+            { $match: query }, // Apply the batch division filter
+            { 
+                $group: {
+                    _id: {
+                        roomNo: "$roomNo",
+                        gender: "$gender"
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            { 
+                $project: {
+                    roomNo: "$_id.roomNo",
+                    gender: "$_id.gender",
+                    count: 1,
+                    _id: 0
+                }
+            },
+            { $sort: { roomNo: 1 } }
+        ]);
+
+        // Organize results by gender
+        const genderWiseRoomStats = {
+            male: roomStats.filter(stat => stat.gender === 'Male' && stat.roomNo),
+            female: roomStats.filter(stat => stat.gender === 'Female' && stat.roomNo)
+        };
+
+        // Return the room statistics
+        res.status(200).json({
+            message: 'Room statistics retrieved successfully',
+            roomStatistics: genderWiseRoomStats
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
+
+
 module.exports = {
     GetDataFor8Dashboard,
     GetDataFor10Dashboard,
-    GetAllStudentData
+    GetAllStudentData,
+    GetAllStudentDataWithRoomAndBedNo,
+    GetRoomStatisticsByBatchDivision
 };

@@ -11,6 +11,7 @@ const TwilioRoute = require ('./routes/TwilioRoute');
 const DashBoardRoute = require('./routes/DashBoardRoute');
 const VerificationRoute = require('./routes/VerificationRoute');
 const DistrictBlockCentersRoute = require('./routes/DistrictBlockCentersRoute');
+const RommAndBedRoute = require("./routes/RoomAndBedRoute");
 
 
 const app = express();
@@ -72,6 +73,7 @@ app.use('/api/notifications', TwilioRoute);
 app.use('/api', DashBoardRoute);
 app.use('/api', VerificationRoute)
 app.use('/api', DistrictBlockCentersRoute);
+app.use('/api', RommAndBedRoute);
 
 app.listen(PORT, function() {
     console.log('Server is running on port ' + PORT);

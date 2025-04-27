@@ -408,11 +408,16 @@ patchDownloadAdmitCardById = async (req, res) => {
 patchAttendanceById = async (req, res) => {
 
     console.log('i am insdie controller')
-    try {
-        const {srn} = req.params;
+
+    const {srn} = req.params;
         console.log(srn)
-        const {  isPresentInL3Examination } = req.body; // Access the values from req.body
-            console.log(isPresentInL3Examination);
+        const {  isPresentInL3Examination, isPresentInL2Examination, bedNo, roomNo } = req.body; // Access the values from req.body
+            console.log("attendance status of mb is",isPresentInL3Examination);
+            console.log("attendance status of s100 is",isPresentInL2Examination);
+            console.log("bedNo and roomNo is", bedNo, roomNo);
+            console.log(typeof(roomNo));
+    try {
+        
 
         //find the document by id
         const existingDocument = await Student.find({srn: srn});
@@ -426,8 +431,10 @@ patchAttendanceById = async (req, res) => {
 
       
         //Update the document
-       
-         
+      
+        if (isPresentInL3Examination !== undefined){
+
+
             const result = await Student.updateOne (
                 {srn: srn},
                 
@@ -437,6 +444,7 @@ patchAttendanceById = async (req, res) => {
                     // admitCard3: req.body.admitCard3,
 
                     isPresentInL3Examination: isPresentInL3Examination,
+                    
 
                    
                 }}
@@ -449,6 +457,47 @@ patchAttendanceById = async (req, res) => {
             message: "Attendance Updated Successfull",
             data: existingDocument,
         })
+
+
+
+
+
+
+        } else if(isPresentInL2Examination !== undefined) {
+
+
+            const result = await Student.updateOne (
+                {srn: srn},
+                
+                {$set:{
+                    
+    
+                    // admitCard3: req.body.admitCard3,
+
+                    isPresentInL2Examination: isPresentInL2Examination,
+                    roomNo: roomNo,
+                    bedNo:bedNo,
+                   
+                }}
+            );
+        
+        
+        //Always respond with success if the document is found and updated
+
+        res.status (200).json({
+            message: "Attendance Updated Successfull",
+            data: existingDocument,
+        })
+
+
+
+
+
+
+
+        }
+
+            
 
     } catch (error) {
 
