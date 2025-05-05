@@ -69,6 +69,10 @@ StudentRoute.get('/attendance-l3/:srn', StudentController.patchAttendanceById);
 
 StudentRoute.patch('/attendance-l3/:srn', StudentController.patchAttendanceById);
 
+StudentRoute.patch('/counselling-l3/:srn', StudentController.patchCounsellingBySrn);
+
+
+
 
 
 

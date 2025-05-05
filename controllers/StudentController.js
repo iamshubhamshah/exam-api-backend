@@ -359,9 +359,11 @@ patchDownloadAdmitCardById = async (req, res) => {
     
                     // admitCard3: req.body.admitCard3,
 
-                    admitCard3: true,
+                    // admitCard3: true,
 
-                    resultStatus2: true
+                    // resultStatus2: true
+
+                    counsellingAdmitCardDownloaded: true
                 }}
             );
         } else {
@@ -517,6 +519,64 @@ patchAttendanceById = async (req, res) => {
 
 
 
+patchCounsellingBySrn = async (req, res) => {
+
+    console.log('i am insdie patchCounsellingBySrn controller')
+    const {selectedBoard, selectedSchool, homeToSchoolDistance } = req.body
+    const {srn} = req.params;
+        console.log(srn)
+        console.log(req.body)
+       
+    try {
+        
+
+        //find the document by id
+        const existingDocument = await Student.find({srn: srn});
+
+        if (!existingDocument) {
+            return res.status(404).json ({message: "No Document Found"});
+        }
+
+       
+        console.log(srn);
+
+      
+        //Update the document
+      
+
+
+
+            const result = await Student.updateOne (
+                {srn: srn},
+                
+                {$set:req.body}
+            );
+
+        //Always respond with success if the document is found and updated
+
+        res.status (200).json({
+            message: "Attendance Updated Successfull",
+            data: existingDocument,
+        })
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Eroor Updating Attendance",
+            error,
+        })
+        
+    }
+}
+
+
+//__________________________________________________________________________________________
+
+
+
+
 
 
 
@@ -533,6 +593,7 @@ module.exports = {
     getPostsBySrn,
     patchPostById,
     patchDownloadAdmitCardById,
-    patchAttendanceById
+    patchAttendanceById,
+    patchCounsellingBySrn
 
 }

@@ -322,7 +322,7 @@ const GetAllStudentData = async (req, res) => {
         // const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1,  L1examinationCenter, L2examinationCenter, admitCard1, attendancePdf } = req.query;
 
         // below updated
-        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf, Level3StudentsRoomNumber, super100L2ExamBatchDivision, gender, roomNo} = req.query;
+        const { srn, isRegisteredBy, isVerified, grade, district, block, school, name, father, isQualifiedL1, isQualifiedL2, isQualifiedL3, L1examinationCenter, L2examinationCenter, L3examinationCenter,  admitCard1, attendancePdf, Level3StudentsRoomNumber, super100L2ExamBatchDivision, gender, roomNo, isPresentInL2Examination} = req.query;
 
         // Construct query object
         const query = {};
@@ -347,6 +347,7 @@ const GetAllStudentData = async (req, res) => {
         if (super100L2ExamBatchDivision) query.super100L2ExamBatchDivision = super100L2ExamBatchDivision;
         if (gender) query.gender = gender;
         if (roomNo) query.roomNo = roomNo;
+        if (isPresentInL2Examination) query.isPresentInL2Examination = isPresentInL2Examination;
 
         console.log("Querying with:", query); // Added log for debugging
         console.log(typeof(roomNo))

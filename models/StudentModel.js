@@ -69,7 +69,11 @@ const studentSchema = new mongoose.Schema(
     isPresentInL3Examination: {type: Boolean, default: false},
     isPresentInL2Examination: {type: Boolean, default: false},
     roomNo: {type: Number},
-    bedNo: {type: Number}
+    bedNo: {type: Number},
+    selectedBoard:{type: String},
+    selectedSchool:{type: String},
+    homeToSchoolDistance:{type: String},
+    counsellingAdmitCardDownloaded: {type: Boolean, default: false}
   },
   { timestamps: true }
 );
