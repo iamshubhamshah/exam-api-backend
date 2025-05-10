@@ -696,6 +696,93 @@ const GetRoomStatisticsByBatchDivision = async (req, res) => {
 
 
 
+// const GetDataFor8DashboardCounselling = async (req, res) => {
+//     try {
+//         const students = await Student.aggregate([
+//             {
+//                 $match: {
+//                     grade: "8",
+//                     isVerified: { $ne: "Rejected" },
+//                     finalShortListOrWaitListStudents: { $in: ["Selected", "Waiting"] }
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: {
+//                         district: "$district",
+//                         counsellingCenterAllocation: "$counsellingCenterAllocation"
+//                     },
+//                     totalStudents: { $sum: 1 },
+//                     enrolledCount: {
+//                         $sum: {
+//                             $cond: [{ $eq: ["$admissionStatus", "Enrolled"] }, 1, 0]
+//                         }
+//                     },
+//                     provisionCount: {
+//                         $sum: {
+//                             $cond: [{ $eq: ["$admissionStatus", "Provision"] }, 1, 0]
+//                         }
+//                     },
+//                     selectedCount: {
+//                         $sum: {
+//                             $cond: [{ $eq: ["$finalShortListOrWaitListStudents", "Selected"] }, 1, 0]
+//                         }
+//                     },
+//                     waitingCount: {
+//                         $sum: {
+//                             $cond: [{ $eq: ["$finalShortListOrWaitListStudents", "Waiting"] }, 1, 0]
+//                         }
+//                     }
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: "$_id.district",
+//                     centers: {
+//                         $push: {
+//                             counsellingCenterAllocation: "$_id.counsellingCenterAllocation",
+//                             totalStudents: "$totalStudents",
+//                             enrolledCount: "$enrolledCount",
+//                             provisionCount: "$provisionCount",
+//                             selectedCount: "$selectedCount",
+//                             waitingCount: "$waitingCount"
+//                         }
+//                     },
+//                     districtTotal: { $sum: "$totalStudents" },
+//                     totalEnrolled: { $sum: "$enrolledCount" },
+//                     totalProvision: { $sum: "$provisionCount" },
+//                     totalSelected: { $sum: "$selectedCount" },
+//                     totalWaiting: { $sum: "$waitingCount" }
+//                 }
+//             },
+//             {
+//                 $project: {
+//                     _id: 0,
+//                     district: "$_id",
+//                     districtTotal: 1,
+//                     totalEnrolled: 1,
+//                     totalProvision: 1,
+//                     totalSelected: 1,
+//                     totalWaiting: 1,
+//                     centers: 1
+//                 }
+//             },
+//             {
+//                 $sort: { district: 1 }
+//             }
+//         ]);
+
+//         res.status(200).json(students);
+//     } catch (error) {
+//         console.error("Error in GetDataFor8DashboardCounselling:", error);
+//         res.status(500).json({ message: "Error fetching counselling dashboard data", error });
+//     }
+// };
+
+
+
+
+
 const GetDataFor8DashboardCounselling = async (req, res) => {
     try {
         const students = await Student.aggregate([
@@ -732,6 +819,16 @@ const GetDataFor8DashboardCounselling = async (req, res) => {
                         $sum: {
                             $cond: [{ $eq: ["$finalShortListOrWaitListStudents", "Waiting"] }, 1, 0]
                         }
+                    },
+                    counsellingPresentCount: {
+                        $sum: {
+                            $cond: [{ $eq: ["$counsellingAttendance", true] }, 1, 0]
+                        }
+                    },
+                    counsellingAbsentCount: {
+                        $sum: {
+                            $cond: [{ $eq: ["$counsellingAttendance", false] }, 1, 0]
+                        }
                     }
                 }
             },
@@ -745,14 +842,18 @@ const GetDataFor8DashboardCounselling = async (req, res) => {
                             enrolledCount: "$enrolledCount",
                             provisionCount: "$provisionCount",
                             selectedCount: "$selectedCount",
-                            waitingCount: "$waitingCount"
+                            waitingCount: "$waitingCount",
+                            counsellingPresentCount: "$counsellingPresentCount",
+                            counsellingAbsentCount: "$counsellingAbsentCount"
                         }
                     },
                     districtTotal: { $sum: "$totalStudents" },
                     totalEnrolled: { $sum: "$enrolledCount" },
                     totalProvision: { $sum: "$provisionCount" },
                     totalSelected: { $sum: "$selectedCount" },
-                    totalWaiting: { $sum: "$waitingCount" }
+                    totalWaiting: { $sum: "$waitingCount" },
+                    totalCounsellingPresent: { $sum: "$counsellingPresentCount" },
+                    totalCounsellingAbsent: { $sum: "$counsellingAbsentCount" }
                 }
             },
             {
@@ -764,6 +865,8 @@ const GetDataFor8DashboardCounselling = async (req, res) => {
                     totalProvision: 1,
                     totalSelected: 1,
                     totalWaiting: 1,
+                    totalCounsellingPresent: 1,
+                    totalCounsellingAbsent: 1,
                     centers: 1
                 }
             },
@@ -778,9 +881,6 @@ const GetDataFor8DashboardCounselling = async (req, res) => {
         res.status(500).json({ message: "Error fetching counselling dashboard data", error });
     }
 };
-
-
-
 
 
 
