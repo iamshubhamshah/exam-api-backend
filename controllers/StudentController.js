@@ -522,26 +522,44 @@ patchAttendanceById = async (req, res) => {
 patchCounsellingBySrn = async (req, res) => {
 
     console.log('i am insdie patchCounsellingBySrn controller')
-    const {selectedBoard, selectedSchool, homeToSchoolDistance } = req.body
-    const {srn} = req.params;
-        console.log(srn)
-        console.log(req.body)
+    const {selectedBoard, selectedSchool, homeToSchoolDistance, counsellingToken, counsellingToken1 } = req.body
+    const {srn, district} = req.params;
+        // console.log(srn)
+        console.log(counsellingToken)
+        console.log(counsellingToken1)
+        console.log(req.params)
        
     try {
         
 
-        //find the document by id
-        const existingDocument = await Student.find({srn: srn});
+        
 
-        if (!existingDocument) {
+        //find the document by id
+        const existingDocument = await Student.find({srn: srn, district: district});
+        
+        if (existingDocument.length === 0) {
             return res.status(404).json ({message: "No Document Found"});
+        } else if (existingDocument?.[0]?.counsellingAttendance === true){
+            return res.status(500).json ({status: "Falied", msg: "Attendance Already Marked"});
+            
+        } 
+
+        let actualCounsellingToken;
+     if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Selected"){
+            actualCounsellingToken = counsellingToken
+        } else if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Waiting") {
+            actualCounsellingToken = counsellingToken1
         }
 
-       
-        console.log(srn);
+       console.log(existingDocument[0].finalShortListOrWaitListStudents)
+       console.log(existingDocument.length)
+       console.log(actualCounsellingToken)
+    
+       // console.log(existingDocument);
 
-      
-        //Update the document
+
+        
+       //Update the document
       
 
 
@@ -549,7 +567,12 @@ patchCounsellingBySrn = async (req, res) => {
             const result = await Student.updateOne (
                 {srn: srn},
                 
-                {$set:req.body}
+                {$set:{
+                    counsellingAttendance:true,
+                    counsellingToken: actualCounsellingToken
+                }
+
+                }
             );
 
         //Always respond with success if the document is found and updated
@@ -574,7 +597,210 @@ patchCounsellingBySrn = async (req, res) => {
 
 //__________________________________________________________________________________________
 
+//Get Api. By Student SRN AND TOKEN NUMBER AND DISTRICT.
 
+getStudentDataBySrnTokenDistrict = async (req, res) => {
+
+    console.log("I am inside get student by by token srn and district")
+
+    const {srn, counsellingToken, district} = req.query
+
+    console.log(req.query)
+
+    try {
+
+        if (srn.length === 10){
+
+            const response = await Student.find({
+                srn: srn,
+                district: district
+            });
+            res.status (200).json({
+                message: "Data fetched successfully",
+                data: response,
+            })
+            
+        } else {
+
+            const response = await Student.find({
+                counsellingToken: counsellingToken,
+                district: district
+            });
+            res.status (200).json({
+                message: "Data fetched successfully",
+                data: response,
+            })
+
+        }
+        
+
+       
+
+    } catch (error) {
+        
+        
+        console.error(error);
+
+        res.status(500).json({
+            message: "Eroor Fetching Data",
+            error,
+        })
+
+    }
+
+}
+
+
+
+
+
+
+// patchCounsellingDocumentationBySrn = async (req, res) => {
+//     console.log('Inside patchCounsellingDocumentationBySrn controller');
+
+//     const { documents, selectedSchool, homeToSchoolDistance } = req.body; // Example: [1, 3, 5]
+//     const { srn, district } = req.query;
+
+//     console.log(req.body)
+//     console.log(req.params)
+
+//     // Map document numbers to field names  
+//     const docMap = {
+//         1: "twoPassportPhoto",
+//         2: "aadharCardCopy",
+//         3: "parentAadhar",
+//         4: "ppp",
+//         5: "slc"
+//     };
+
+//     try {
+//         // Find the document by SRN and District
+//         const student = await Student.findOne({ srn, district });
+
+//         if (!student) {
+//             return res.status(404).json({ message: "No Document Found" });
+//         } 
+        
+//         // else if (student.counsellingAttendance === true) {
+//         //     return res.status(400).json({ status: "Failed", msg: "Attendance Already Marked" });
+//         // }
+
+//         // Build new documents object with all fields defaulted to 0
+//         const updatedDocs = {
+//             twoPassportPhoto: 0,
+//             aadharCardCopy: 0,
+//             parentAadhar: 0,
+//             ppp: 0,
+//             slc: 0
+//         };
+
+//         // Set submitted documents to 1
+//         documents.forEach(num => {
+//             const key = docMap[num];
+//             if (key) updatedDocs[key] = 1;
+//         });
+
+//         // Update the student document
+//         const result = await Student.updateOne(
+//             { srn, district },
+//             {
+//                 $set: {
+//                     documents: updatedDocs,
+//                     counsellingCenterAllocation:selectedSchool,
+//                     homeToSchoolDistance:homeToSchoolDistance
+//                 }
+//             }
+//         );
+
+//         res.status(200).json({
+//             message: "Documents updated successfully",
+//             updatedDocs,
+//         });
+
+//     } catch (error) {
+//         console.error("Error updating documents:", error);
+//         res.status(500).json({
+//             message: "Error updating documents",
+//             error,
+//         });
+//     }
+// };
+
+patchCounsellingDocumentationBySrn = async (req, res) => {
+    console.log('Inside patchCounsellingDocumentationBySrn controller');
+
+    const { documents, selectedSchool, homeToSchoolDistance } = req.body; // Example: [1, 3, 5]
+    const { srn, district } = req.query;
+
+    console.log(req.body)
+    console.log(req.params)
+
+    // Map document numbers to field names  
+    const docMap = {
+        1: "twoPassportPhoto",
+        2: "aadharCardCopy",
+        3: "parentAadhar",
+        4: "ppp",
+        5: "slc"
+    };
+
+    try {
+        // Find the document by SRN and District
+        const student = await Student.findOne({ srn, district });
+
+        if (!student) {
+            return res.status(404).json({ message: "No Document Found" });
+        } 
+        
+        // else if (student.counsellingAttendance === true) {
+        //     return res.status(400).json({ status: "Failed", msg: "Attendance Already Marked" });
+        // }
+
+        // Build new documents object with all fields defaulted to 0
+        const updatedDocs = {
+            twoPassportPhoto: 0,
+            aadharCardCopy: 0,
+            parentAadhar: 0,
+            ppp: 0,
+            slc: 0
+        };
+
+        // Set submitted documents to 1
+        documents.forEach(num => {
+            const key = docMap[num];
+            if (key) updatedDocs[key] = 1;
+        });
+
+        // Determine admissionStatus based on presence of document 5 (slc)
+        const admissionStatus = documents.includes(5) ? "Enrolled" : "Provision";
+
+        // Update the student document
+        const result = await Student.updateOne(
+            { srn, district },
+            {
+                $set: {
+                    documents: updatedDocs,
+                    counsellingCenterAllocation: selectedSchool,
+                    homeToSchoolDistance: homeToSchoolDistance,
+                    admissionStatus: admissionStatus,
+                    selectedSchool:selectedSchool,
+                }
+            }
+        );
+
+        res.status(200).json({
+            message: "Documents updated successfully",
+            updatedDocs,
+        });
+
+    } catch (error) {
+        console.error("Error updating documents:", error);
+        res.status(500).json({
+            message: "Error updating documents",
+            error,
+        });
+    }
+};
 
 
 
@@ -594,6 +820,8 @@ module.exports = {
     patchPostById,
     patchDownloadAdmitCardById,
     patchAttendanceById,
-    patchCounsellingBySrn
+    patchCounsellingBySrn,
+    getStudentDataBySrnTokenDistrict,
+    patchCounsellingDocumentationBySrn
 
 }

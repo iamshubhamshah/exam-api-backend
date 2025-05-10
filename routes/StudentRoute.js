@@ -69,11 +69,12 @@ StudentRoute.get('/attendance-l3/:srn', StudentController.patchAttendanceById);
 
 StudentRoute.patch('/attendance-l3/:srn', StudentController.patchAttendanceById);
 
-StudentRoute.patch('/counselling-l3/:srn', StudentController.patchCounsellingBySrn);
+StudentRoute.patch('/counselling-l3/:srn/:district', StudentController.patchCounsellingBySrn);
+
+StudentRoute.patch('/documentation', StudentController.patchCounsellingDocumentationBySrn);
 
 
-
-
+StudentRoute.get("/student-by-token", StudentController.getStudentDataBySrnTokenDistrict);
 
 
 

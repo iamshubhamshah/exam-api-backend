@@ -11,6 +11,9 @@ DashBoardRoute.get('/Student-data-roomandbed', DashBoardController.GetAllStudent
 DashBoardRoute.get('/room-statistics', DashBoardController.GetRoomStatisticsByBatchDivision);
 
 
+
+DashBoardRoute.get('/counselling-dash', DashBoardController.GetDataFor8DashboardCounselling);
+
 module.exports = DashBoardRoute;
 
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { BundleCloneListInstance } = require("twilio/lib/rest/numbers/v2/bundleClone");
 
 const studentSchema = new mongoose.Schema(
   {
@@ -70,10 +71,25 @@ const studentSchema = new mongoose.Schema(
     isPresentInL2Examination: {type: Boolean, default: false},
     roomNo: {type: Number},
     bedNo: {type: Number},
+    s100L2RollNumber:{type: String},
+    finalShortListOrWaitListStudents: {type: String},
     selectedBoard:{type: String},
     selectedSchool:{type: String},
     homeToSchoolDistance:{type: String},
-    counsellingAdmitCardDownloaded: {type: Boolean, default: false}
+    counsellingAdmitCardDownloaded: {type: Boolean, default: false},
+    counsellingAttendance: {type: Boolean, default: false},
+    counsellingToken: {type: String, default: 0},
+    documents: {type: Object, default:{
+      twoPassportPhoto: 0,
+      aadharCardCopy: 0,
+      parentAadhar: 0,
+      ppp: 0,
+      slc: 0
+    } },
+
+    counsellingCenterAllocation: {type: String},
+    admissionStatus: {type: String}
+
   },
   { timestamps: true }
 );
