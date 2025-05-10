@@ -46,6 +46,7 @@ const studentSchema = new mongoose.Schema(
     isVerifiedBy: { type: String }, // Could represent the user or admin who verified the student
     slipId: {type: String}, //Genereates dynamic acknowledgment id for the login of the students.
     rollNumber: { type: String },
+    L1districtAdmitCard: {type: String},
     examType: { type: String },
     centerAllocation1: { type: String },
     centerAllocation2: { type: String },

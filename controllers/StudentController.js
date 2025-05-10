@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');   //{connect}
 const Student = require('../models/StudentModel');
-
+const getNextSequence = require('../utils/mbl3Token.utils');
 
 //Below API posts the data from the form body
 const createPost = async (req, res) => {
@@ -519,79 +519,152 @@ patchAttendanceById = async (req, res) => {
 
 
 
-patchCounsellingBySrn = async (req, res) => {
+// patchCounsellingBySrn = async (req, res) => {
 
-    console.log('i am insdie patchCounsellingBySrn controller')
-    const {selectedBoard, selectedSchool, homeToSchoolDistance, counsellingToken, counsellingToken1 } = req.body
-    const {srn, district} = req.params;
-        // console.log(srn)
-        console.log(counsellingToken)
-        console.log(counsellingToken1)
-        console.log(req.params)
+//     console.log('i am insdie patchCounsellingBySrn controller')
+//     const {selectedBoard, selectedSchool, homeToSchoolDistance, counsellingToken, counsellingToken1 } = req.body
+//     const {srn, district} = req.params;
+//         // console.log(srn)
+//         console.log(counsellingToken)
+//         console.log(counsellingToken1)
+//         console.log(req.params)
        
-    try {
+//     try {
         
 
         
 
-        //find the document by id
-        const existingDocument = await Student.find({srn: srn, district: district});
+//         //find the document by id
+//         const existingDocument = await Student.find({srn: srn, district: district});
         
-        if (existingDocument.length === 0) {
-            return res.status(404).json ({message: "No Document Found"});
-        } else if (existingDocument?.[0]?.counsellingAttendance === true){
-            return res.status(500).json ({status: "Falied", msg: "Attendance Already Marked"});
+//         if (existingDocument.length === 0) {
+//             return res.status(404).json ({message: "No Document Found"});
+//         } else if (existingDocument?.[0]?.counsellingAttendance === true){
+//             return res.status(500).json ({status: "Falied", msg: "Attendance Already Marked"});
             
-        } 
+//         } 
 
-        let actualCounsellingToken;
-     if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Selected"){
-            actualCounsellingToken = counsellingToken
-        } else if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Waiting") {
-            actualCounsellingToken = counsellingToken1
-        }
+//         let actualCounsellingToken;
+//      if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Selected"){
+//             actualCounsellingToken = counsellingToken
+//         } else if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Waiting") {
+//             actualCounsellingToken = counsellingToken1
+//         }
 
-       console.log(existingDocument[0].finalShortListOrWaitListStudents)
-       console.log(existingDocument.length)
-       console.log(actualCounsellingToken)
+//        console.log(existingDocument[0].finalShortListOrWaitListStudents)
+//        console.log(existingDocument.length)
+//        console.log(actualCounsellingToken)
     
-       // console.log(existingDocument);
+//        // console.log(existingDocument);
 
 
         
-       //Update the document
+//        //Update the document
       
 
 
 
-            const result = await Student.updateOne (
-                {srn: srn},
+//             const result = await Student.updateOne (
+//                 {srn: srn},
                 
-                {$set:{
-                    counsellingAttendance:true,
-                    counsellingToken: actualCounsellingToken
-                }
+//                 {$set:{
+//                     counsellingAttendance:true,
+//                     counsellingToken: actualCounsellingToken
+//                 }
 
-                }
-            );
+//                 }
+//             );
 
-        //Always respond with success if the document is found and updated
+//         //Always respond with success if the document is found and updated
 
-        res.status (200).json({
-            message: "Attendance Updated Successfull",
-            data: existingDocument,
-        })
+//         res.status (200).json({
+//             message: "Attendance Updated Successfull",
+//             data: existingDocument,
+//         })
 
-    } catch (error) {
+//     } catch (error) {
 
-        console.error(error);
+//         console.error(error);
 
-        res.status(500).json({
-            message: "Eroor Updating Attendance",
-            error,
-        })
+//         res.status(500).json({
+//             message: "Eroor Updating Attendance",
+//             error,
+//         })
         
+//     }
+// }
+
+
+
+
+patchCounsellingBySrn = async (req, res) => {
+  console.log('Inside patchCounsellingBySrn controller');
+
+  const { selectedBoard, selectedSchool, homeToSchoolDistance, counsellingToken, counsellingToken1 } = req.body;
+  const { srn, district } = req.params;
+
+  try {
+    // Find the student document by SRN and district
+    const existingDocument = await Student.find({ srn: srn, district: district });
+
+    if (existingDocument.length === 0) {
+      return res.status(404).json({ message: "No Document Found" });
+    } else if (existingDocument?.[0]?.counsellingAttendance === true) {
+      return res.status(500).json({ status: "Failed", msg: "Attendance Already Marked" });
     }
+
+    // Get the class name (make sure this is the correct field in your schema)
+    const className = existingDocument[0].L1districtAdmitCard;
+    const selectionStatus = existingDocument[0].finalShortListOrWaitListStudents;
+    // Replace with the actual field name
+    const counterKey = `${selectionStatus}_${className}`; // Example: "counsellingToken_ClassA"
+console.log("i am counterkey", counterKey)
+    // Fetch the next available counselling token for this class
+
+    const generatedToken = await getNextSequence(counterKey);
+
+    let actualCounsellingToken;
+    if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Selected") {
+      actualCounsellingToken = counsellingToken;
+    } else if (existingDocument?.[0]?.finalShortListOrWaitListStudents === "Waiting") {
+      actualCounsellingToken = counsellingToken1;
+    }
+
+    let finalToken;
+    if (selectionStatus === "Selected"){
+        finalToken = 'S'+generatedToken
+    } else if (selectionStatus === "Waiting") {
+        finalToken = 'W'+generatedToken
+    }
+
+    // Update the student document with the counselling attendance and token
+    const result = await Student.updateOne(
+      { srn: srn },
+      {
+        $set: {
+          counsellingAttendance: true,
+          counsellingToken: finalToken,
+        //   selectedBoard,
+        //   selectedSchool,
+        //   homeToSchoolDistance,
+        }
+      }
+    );
+
+    // Respond with success
+    res.status(200).json({
+      message: "Attendance Updated Successfully",
+      tokenIssued: generatedToken,
+      data: existingDocument,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error Updating Attendance",
+      error,
+    });
+  }
 }
 
 
@@ -726,6 +799,9 @@ getStudentDataBySrnTokenDistrict = async (req, res) => {
 //     }
 // };
 
+
+//Documentation API...
+
 patchCounsellingDocumentationBySrn = async (req, res) => {
     console.log('Inside patchCounsellingDocumentationBySrn controller');
 
@@ -801,6 +877,8 @@ patchCounsellingDocumentationBySrn = async (req, res) => {
         });
     }
 };
+
+//------------------------------------------------------------
 
 
 
