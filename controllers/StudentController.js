@@ -654,7 +654,7 @@ console.log("i am counterkey", counterKey)
     // Respond with success
     res.status(200).json({
       message: "Attendance Updated Successfully",
-      tokenIssued: generatedToken,
+      tokenIssued: finalToken,
       data: existingDocument,
     });
 
