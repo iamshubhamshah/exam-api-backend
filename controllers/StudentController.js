@@ -368,7 +368,7 @@ patchDownloadAdmitCardById = async (req, res) => {
             );
         } else {
             console.log('i am in a else block')
-
+            console.log(gradeForDynamicallyUpdatingResultStatusInDb)
             const result = await Student.updateOne (
                 {_id: id},
                 {$set:{
@@ -376,7 +376,8 @@ patchDownloadAdmitCardById = async (req, res) => {
     
                     //admitCard1: req.body.admitCard1,
                     //resultStatus1: true,
-                    admitCard2: true
+                    //admitCard2: true,
+                    resultStatus2: true
                 }}
             );
 
